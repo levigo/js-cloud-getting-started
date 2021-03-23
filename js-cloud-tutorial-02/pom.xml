@@ -1,0 +1,41 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jadice</groupId>
+		<artifactId>js-cloud-getting-started</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>js-cloud-tutorial-02</artifactId>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<jadice.server.director-client.version>2020.0-pre.0.1.4</jadice.server.director-client.version>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.jadice.server.cloud.client</groupId>
+			<artifactId>client</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.jadice.server.cloud.client</groupId>
+				<artifactId>client</artifactId>
+				<version>${jadice.server.director-client.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

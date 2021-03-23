@@ -1,0 +1,76 @@
+---
+stage: dev
+publisher:
+  s3:
+    bucket: jadice-server-ocr-bucket
+    endpoint: "http://${MINIO_ENDPOINT}:${MINIO_PORT}"
+    access-key: "${MINIO_ACCESS_KEY}"
+    secret-key: "${MINIO_SECRET_KEY}"
+
+jadice:
+  input:
+    enforceStreamAnalysis: false
+    supported:
+      - image/tif
+      - image/tiff
+      - image/png
+      - application/pdf
+      - application/msword # .doc  .dot
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.document # .docx
+      - application/vnd.openxmlformats-officedocument.wordprocessingml.template # .dotx
+      - application/vnd.ms-excel # .xls .xlt .xla
+      - application/vnd.ms-powerpoint # .ppt .pot .pps .ppa
+      - text/html
+  output:
+    analyzeStreamBeforePublishing: true
+  uriFilter:
+    supportedSchemes:
+      - https
+      - http
+
+spring:
+  application:
+    name: js-cw-${JS_CW_WORKER_TYPE:undefined}
+
+opentracing:
+  jaeger:
+    log-spans: true
+    service-name: preprod_js-cw-${JS_CW_WORKER_TYPE:undefined}
+    tags:
+      stage: ${stage}
+
+management:
+  endpoint.health.enabled: true
+  endpoint.prometheus.enabled: true
+  endpoint.info.enabled: true
+  endpoints:
+    # set endpoint enablement to be opt-in
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "health,prometheus,info"
+  metrics:
+    enable:
+      all: true
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    root: INFO
+    org.springframework: INFO
+    com.jadice.server: INFO
+    org.jadice.server: INFO
+    com.levigo.jadice.server: INFO
+    com.jadice.server.cloud.worker.tessocr: DEBUG
+    # This package's LogLevel decides what messages are appended to the WorkerResult
+    com.jadice.server.cloud.runtime.internal: WARN
+    # do not show meaningless obtrusive warning, see https://github.com/aws/aws-sdk-java/issues/1707
+    com.amazonaws.auth.profile.internal.BasicProfileConfigLoader: ERROR
+    # do not show apache-tika warnings about missing optional modules
+    org.apache.tika.parser: ERROR
+    org.apache.tika.parsers: ERROR
+    # do not show low level warnings
+    com.levigo.jadice: ERROR
+...
